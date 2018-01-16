@@ -11,10 +11,11 @@
 
 package onema.core.json
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.json4s._
-import org.json4s.native.JsonMethods._
-import org.json4s.native.Serialization
-import org.json4s.native.Serialization.write
+import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.Serialization
+import org.json4s.jackson.Serialization.write
 
 import scala.reflect._
 
@@ -34,6 +35,16 @@ object Implicits {
     def toJson: String = {
       implicit val formats = Serialization.formats(NoTypeHints)
       write(anyClass)
+    }
+
+    /**
+      * Some java types are not properly serialized by json4s
+      *
+      * @return
+      */
+    def javaClassToJson: String = {
+      val mapper = new ObjectMapper
+      mapper.writeValueAsString(anyClass)
     }
   }
 

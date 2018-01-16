@@ -1,8 +1,8 @@
 organization := "onema"
 
-name := "JsonCore"
+name := "json-core"
 
-version := "0.3.1"
+version := "1.0.0"
 
 scalaVersion := "2.12.4"
 
@@ -10,7 +10,7 @@ libraryDependencies ++= {
   Seq(
 
     // Json De/Serializer
-    "org.json4s"                 % "json4s-native_2.12"       % "3.5.3",
+    "org.json4s"                 %% "json4s-jackson"          % "3.5.3",
 
     // Logging
     "com.typesafe.scala-logging" %% "scala-logging"           % "3.7.2",

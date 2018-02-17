@@ -12,10 +12,6 @@ libraryDependencies ++= {
     // Json De/Serializer
     "org.json4s"                 %% "json4s-jackson"          % "3.5.3",
 
-    // Logging
-    "com.typesafe.scala-logging" %% "scala-logging"           % "3.7.2",
-    "ch.qos.logback"             % "logback-classic"          % "1.1.7",
-
     // Testing
     "org.scalatest"             %% "scalatest"                % "3.0.0"       % "test"
   )

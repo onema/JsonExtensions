@@ -17,7 +17,13 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
   "A simple json object" should "be converted to an object" in {
 
     // Arrange
-    val fooJson = "{\"name\": \"test\", \"value\": \"foo\", \"id\": 123}"
+    val fooJson =
+      """{
+        |   "name": "test",
+        |   "value": "foo",
+        |   "id": 123
+        |}
+      """.stripMargin
 
     // Act
     val fooObject = fooJson.jsonParse[TestJsonFoo]

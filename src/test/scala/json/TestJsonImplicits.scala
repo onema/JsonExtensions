@@ -10,6 +10,7 @@
   */
 package json
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import onema.core.json.Implicits._
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -119,6 +120,43 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     // Assert
     jsonValue should be(result)
   }
+
+  "A json string " should "be converted to java object using the parseToJavaClass" in {
+    // Arrange
+    val json =
+      """
+        |  {
+        |    "age":"23",
+        |    "name":"foobar",
+        |    "blog":"http://blog.test.com",
+        |    "messages":["msg1","msg2","msg3"]
+        |  }
+      """.stripMargin
+
+    // Act
+    val javaClass = json.jsonParseToJavaClass[Example]
+
+    // Assert
+    javaClass.getAge should be(23)
+    javaClass.getName should be("foobar")
+    javaClass.getBlog should be("http://blog.test.com")
+  }
+
+//  "A json object with dashes in property names" should "be converted to an object with the proper annotation" in {
+//
+//    // Arrange
+//    val json =
+//      """{
+//        |   "test_one": "testing"
+//        |}
+//      """.stripMargin
+//
+//    // Act
+//    val obj = json.jsonParse[TestWithAnnotation]
+//
+//    // Assert
+//    obj.testOne should be("testing")
+//  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)
@@ -126,3 +164,5 @@ case class TestJsonBaz(id: Int, array: Array[TestJsonFoo])
 case class TestJsonBazSeq(id: Int, array: Seq[TestJsonFoo])
 case class TestJsonBar(id: Int, testFoo: TestJsonFoo)
 case class Message(data: Seq[String])
+case class TestWithAnnotation(@JsonProperty("test_one") testOne: String)
+case class ScalaExample(age: Int, name: String, blog: String, messages: Seq[String])

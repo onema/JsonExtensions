@@ -4,8 +4,6 @@ phases:
   pre_build:
     commands:
       - ls -la
-      - echo $CODACY_PROJECT_TOKEN
-
 
   build:
     commands:

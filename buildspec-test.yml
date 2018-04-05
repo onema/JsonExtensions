@@ -4,7 +4,8 @@ phases:
   pre_build:
     commands:
       - ls -la
-      - export CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN
+      - echo $CODACY_PROJECT_TOKEN
+
 
   build:
     commands:
@@ -17,6 +18,8 @@ phases:
       - echo Generating coverage report
       - sbt coverageReport
       - sbt coverageAggregate
+
+      - echo Submit coverage report to Codacy
       - sbt codacyCoverage
 
   post_build:

@@ -141,22 +141,6 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     javaClass.getName should be("foobar")
     javaClass.getBlog should be("http://blog.test.com")
   }
-
-//  "A json object with dashes in property names" should "be converted to an object with the proper annotation" in {
-//
-//    // Arrange
-//    val json =
-//      """{
-//        |   "test_one": "testing"
-//        |}
-//      """.stripMargin
-//
-//    // Act
-//    val obj = json.jsonParse[TestWithAnnotation]
-//
-//    // Assert
-//    obj.testOne should be("testing")
-//  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)

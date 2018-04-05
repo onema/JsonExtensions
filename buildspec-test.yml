@@ -4,13 +4,20 @@ phases:
   pre_build:
     commands:
       - ls -la
+      - export CODACY_PROJECT_TOKEN=$CODACY_PROJECT_TOKEN
+
   build:
     commands:
       - echo Build started on `date`
       - sbt compile
 
       - echo Testing Core on `date`
-      - sbt clean test
+      - sbt clean coverage test
+
+      - echo Generating coverage report
+      - sbt coverageReport
+      - sbt coverageAggregate
+      - sbt codacyCoverage
 
   post_build:
     commands:

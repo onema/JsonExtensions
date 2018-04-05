@@ -13,6 +13,7 @@ package json
 import com.fasterxml.jackson.annotation.JsonProperty
 import onema.core.json.Implicits._
 import org.scalatest.{FlatSpec, Matchers}
+import scala.collection.JavaConverters._
 
 class TestJsonImplicits  extends FlatSpec with Matchers {
   "A simple json object" should "be converted to an object" in {
@@ -121,12 +122,28 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     jsonValue should be(result)
   }
 
+  "A java class " should "be converted to json string using javaClassToJson" in {
+    // Arrange
+    val javaCls = new Example
+    javaCls.setName("foobar")
+    javaCls.setAge(34)
+    javaCls.setBlog("http://blog.test.com")
+    javaCls.setMessages(List("msg1", "msg2", "msg3").asJava)
+    val expectedJson = "{\"age\":34,\"name\":\"foobar\",\"blog\":\"http://blog.test.com\",\"messages\":[\"msg1\",\"msg2\",\"msg3\"]}"
+
+    // Act
+    val result = javaCls.javaClassToJson
+
+    // Assert
+    result should be (expectedJson)
+  }
+
   "A json string " should "be converted to java object using the parseToJavaClass" in {
     // Arrange
     val json =
       """
         |  {
-        |    "age":"23",
+        |    "age":23,
         |    "name":"foobar",
         |    "blog":"http://blog.test.com",
         |    "messages":["msg1","msg2","msg3"]
@@ -141,22 +158,6 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     javaClass.getName should be("foobar")
     javaClass.getBlog should be("http://blog.test.com")
   }
-
-//  "A json object with dashes in property names" should "be converted to an object with the proper annotation" in {
-//
-//    // Arrange
-//    val json =
-//      """{
-//        |   "test_one": "testing"
-//        |}
-//      """.stripMargin
-//
-//    // Act
-//    val obj = json.jsonParse[TestWithAnnotation]
-//
-//    // Assert
-//    obj.testOne should be("testing")
-//  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)

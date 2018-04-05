@@ -2,7 +2,7 @@ organization := "onema"
 
 name := "json-core"
 
-version := "1.1.0"
+version := "1.1.0-SNAPSHOT"
 
 scalaVersion := "2.12.4"
 

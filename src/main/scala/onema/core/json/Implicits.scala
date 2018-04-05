@@ -11,6 +11,7 @@
 
 package onema.core.json
 
+import com.fasterxml.jackson.core.`type`.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -18,6 +19,7 @@ import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
 
 import scala.reflect._
+import scala.util.{Failure, Success, Try}
 
 
 /**
@@ -48,18 +50,34 @@ object Implicits {
     }
   }
 
-  implicit class JsonStringToCaseClass(json: String) {
+  implicit class JsonStringToClass(json: String) {
 
     //--- Methods ---
     /**
       * Parses a json string to a class of the given type parameter.
       *
       * @tparam T type to serialize json into
-      * @return
+      * @return object of type T
       */
     def jsonParse[T: Manifest]: T = {
       implicit val formats = Serialization.formats(NoTypeHints)
       parse(json).extract[T]
+    }
+
+    /**
+      * Parses a json string to a java class of the given type parameter.
+      * @tparam T type to serialize json into
+      * @return object of type T
+      */
+    def jsonParseToJavaClass[T: ClassTag]: T = {
+      val classType: Class[_] = implicitly[ClassTag[T]].runtimeClass
+      val mapper = new ObjectMapper()
+      Try(mapper.readValue(json, classType)) match {
+        case Success(result) =>
+          result.asInstanceOf[T]
+        case Failure(e) =>
+          throw e
+      }
     }
   }
 }

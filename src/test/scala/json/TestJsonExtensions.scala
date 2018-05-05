@@ -10,12 +10,11 @@
   */
 package json
 
+import onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
-import onema.core.json.Implicits._
 import org.scalatest.{FlatSpec, Matchers}
-import scala.collection.JavaConverters._
 
-class TestJsonImplicits  extends FlatSpec with Matchers {
+class TestJsonExtensions  extends FlatSpec with Matchers {
   "A simple json object" should "be converted to an object" in {
 
     // Arrange
@@ -28,7 +27,7 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
       """.stripMargin
 
     // Act
-    val fooObject = fooJson.jsonParse[TestJsonFoo]
+    val fooObject = fooJson.jsonDecode[TestJsonFoo]
 
     // Assert
     fooObject.name should be("test")
@@ -42,7 +41,7 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     val fooJson = "{\"name\": \"test\", \"value\": \"foo\"}"
 
     // Act
-    val fooObject = fooJson.jsonParse[TestJsonFoo]
+    val fooObject = fooJson.jsonDecode[TestJsonFoo]
 
     // Assert
     fooObject.name should be("test")
@@ -61,7 +60,7 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
       """.stripMargin
 
     // Act
-    val barObject = barJson.jsonParse[TestJsonBar]
+    val barObject = barJson.jsonDecode[TestJsonBar]
 
     // Assert
     barObject.id should be(321)
@@ -81,7 +80,7 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
       """.stripMargin
 
     // Act
-    val barObject = bazJson.jsonParse[TestJsonBaz]
+    val barObject = bazJson.jsonDecode[TestJsonBaz]
 
     // Assert
     barObject.id should be(321)
@@ -101,7 +100,7 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
       """.stripMargin
 
     // Act
-    val barObject = bazJson.jsonParse[TestJsonBazSeq]
+    val barObject = bazJson.jsonDecode[TestJsonBazSeq]
 
     // Assert
     barObject.id should be(321)
@@ -116,48 +115,12 @@ class TestJsonImplicits  extends FlatSpec with Matchers {
     val message = Message(Seq("http://foo.com", "http://bar.com", "http://baz.com", "http://blah.org"))
 
     // Act
-    val jsonValue = message.toJson
+    val jsonValue = message.asJson
 
     // Assert
     jsonValue should be(result)
   }
 
-  "A java class " should "be converted to json string using javaClassToJson" in {
-    // Arrange
-    val javaCls = new Example
-    javaCls.setName("foobar")
-    javaCls.setAge(34)
-    javaCls.setBlog("http://blog.test.com")
-    javaCls.setMessages(List("msg1", "msg2", "msg3").asJava)
-    val expectedJson = "{\"age\":34,\"name\":\"foobar\",\"blog\":\"http://blog.test.com\",\"messages\":[\"msg1\",\"msg2\",\"msg3\"]}"
-
-    // Act
-    val result = javaCls.javaClassToJson
-
-    // Assert
-    result should be (expectedJson)
-  }
-
-  "A json string " should "be converted to java object using the parseToJavaClass" in {
-    // Arrange
-    val json =
-      """
-        |  {
-        |    "age":23,
-        |    "name":"foobar",
-        |    "blog":"http://blog.test.com",
-        |    "messages":["msg1","msg2","msg3"]
-        |  }
-      """.stripMargin
-
-    // Act
-    val javaClass = json.jsonParseToJavaClass[Example]
-
-    // Assert
-    javaClass.getAge should be(23)
-    javaClass.getName should be("foobar")
-    javaClass.getBlog should be("http://blog.test.com")
-  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)

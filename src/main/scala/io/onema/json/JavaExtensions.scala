@@ -9,7 +9,7 @@
   * @author Juan Manuel Torres <kinojman@gmail.com>
   */
 
-package onema.json
+package io.onema.json
 
 import com.fasterxml.jackson.databind.ObjectMapper
 

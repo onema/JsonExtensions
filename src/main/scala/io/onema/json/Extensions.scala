@@ -9,7 +9,7 @@
   * @author Juan Manuel Torres <kinojman@gmail.com>
   */
 
-package onema.json
+package io.onema.json
 
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -37,8 +37,8 @@ object Extensions {
 
     /**
       * Converts a class into a json string using a custom serializer
-      * @param serializer
-      * @tparam TEnum
+      * @param serializer custom serializer
+      * @tparam TEnum Some types cannot be easily serialized like enums , use custom serializer for these types
       * @return
       */
     def asJson[TEnum](serializer: CustomSerializer[TEnum]): String = {

@@ -10,9 +10,8 @@
   */
 package json
 
+import io.onema.json.JavaExtensions._
 import org.scalatest.{FlatSpec, Matchers}
-
-import onema.json.JavaExtensions._
 import scala.collection.JavaConverters._
 
 class TestJsonJavaExtensions  extends FlatSpec with Matchers {

@@ -12,6 +12,9 @@ package json
 
 import io.onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
+import json.TestTypes.{TEST_1, TEST_2, TestType}
+import org.json4s.CustomSerializer
+import org.json4s.JsonAST.JString
 import org.scalatest.{FlatSpec, Matchers}
 
 class TestJsonExtensions  extends FlatSpec with Matchers {
@@ -121,6 +124,29 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     jsonValue should be(result)
   }
 
+  "A case class with an enum using a custom serializer " should "be converted to json" in {
+    // Arrange
+    val result = "{\"name\":\"foo\",\"testType\":\"test-1\"}"
+    val obj = TestWithTypes("foo", TEST_1)
+
+    // Act
+    val jsonValue = obj.asJson(TestTypeSerializer)
+
+    // Assert
+    jsonValue should be(result)
+  }
+
+  "A json string with an enum using a custom serializer " should "be converted to a case class" in {
+    // Arrange
+    val jsonString = "{\"name\":\"foo\",\"testType\":\"test-2\"}"
+
+    // Act
+    val obj = jsonString.jsonDecode[TestWithTypes, TestType](TestTypeSerializer)
+
+    // Assert
+    obj.name should be("foo")
+    obj.testType should be (TEST_2)
+  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)
@@ -130,3 +156,18 @@ case class TestJsonBar(id: Int, testFoo: TestJsonFoo)
 case class Message(data: Seq[String])
 case class TestWithAnnotation(@JsonProperty("test_one") testOne: String)
 case class ScalaExample(age: Int, name: String, blog: String, messages: Seq[String])
+case class TestWithTypes(name: String, testType: TestType)
+object TestTypes {
+  sealed abstract class TestType(val name: String)
+  case object TEST_1 extends TestType("work-request")
+  case object TEST_2 extends TestType("process-request")
+}
+
+object TestTypeSerializer extends CustomSerializer[TestType](format => ({
+  case JString("test-1") => TEST_1
+  case JString("test-2") => TEST_2
+}, {
+  case TEST_1 => JString("test-1")
+  case TEST_2 => JString("test-2")
+}
+))

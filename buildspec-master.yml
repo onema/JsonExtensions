@@ -6,9 +6,6 @@ phases:
       - ls -la
   build:
     commands:
-      - echo Build started on `date`
-      - sbt compile
-
       - echo Testing Core on `date`
       - sbt clean coverage test
 

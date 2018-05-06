@@ -1,4 +1,4 @@
-organization := "onema"
+organization := "io.onema"
 
 name := "json-extensions"
 

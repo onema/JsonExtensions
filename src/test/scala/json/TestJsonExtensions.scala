@@ -10,7 +10,7 @@
   */
 package json
 
-import onema.json.Extensions._
+import io.onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.scalatest.{FlatSpec, Matchers}
 

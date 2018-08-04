@@ -19,6 +19,9 @@ phases:
 
       - echo Submit coverage report to Codacy
       - echo "${CODACY_PROJECT_TOKEN}"
+      - echo "${CODEBUILD_SOURCE_VERSION}"
+      - echo "CI Commit ${CI_COMMIT}"
+      - export CI_COMMIT="${CODEBUILD_SOURCE_VERSION}"
       - sbt codacyCoverage
 
   post_build:

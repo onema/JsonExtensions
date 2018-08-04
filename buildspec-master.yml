@@ -14,10 +14,11 @@ phases:
       - sbt coverageAggregate
 
       - echo Submit coverage report to Codacy
+      - export CI_COMMIT="${CODEBUILD_SOURCE_VERSION}"
       - sbt codacyCoverage
 
-      - echo Publishing on `date`
-      - sbt publish
+#      - echo Publishing on `date`
+#      - sbt publish
 
   post_build:
     commands:

@@ -31,7 +31,7 @@ developers := List(
   Developer(
     id    = "onema",
     name  = "Juan Manuel Torres",
-    email = "kinojman@gmail.com",
+    email = "software@onema.io",
     url   = url("https://github.com/onema/")
   )
 )

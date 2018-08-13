@@ -2,7 +2,7 @@ organization := "io.onema"
 
 name := "json-extensions"
 
-version := "0.1.0"
+version := "0.2.0"
 
 scalaVersion := "2.12.5"
 
@@ -10,10 +10,11 @@ libraryDependencies ++= {
   Seq(
 
     // Json De/Serializer
-    "org.json4s"                 %% "json4s-jackson"          % "3.5.3",
+    "org.json4s"                     %% "json4s-jackson"             % "3.6.0",
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"       % "2.9.6",
 
     // Testing
-    "org.scalatest"             %% "scalatest"                % "3.0.0"       % "test"
+    "org.scalatest"                  %% "scalatest"                  % "3.0.0"       % "test"
   )
 }
 

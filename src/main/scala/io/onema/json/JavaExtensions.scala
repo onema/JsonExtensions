@@ -6,12 +6,13 @@
   *
   * copyright (c) 2017, Juan Manuel Torres (http://onema.io)
   *
-  * @author Juan Manuel Torres <kinojman@gmail.com>
+  * @author Juan Manuel Torres <software@onema.io>
   */
 
 package io.onema.json
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.{DeserializationFeature, MapperFeature, ObjectMapper}
+import com.fasterxml.jackson.datatype.joda.JodaModule
 
 import scala.reflect._
 import scala.util.{Failure, Success, Try}
@@ -42,6 +43,10 @@ object JavaExtensions {
     def jsonDecode[T: ClassTag]: T = {
       val classType: Class[_] = implicitly[ClassTag[T]].runtimeClass
       val mapper = new ObjectMapper()
+      mapper.registerModule(new JodaModule)
+      mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+      mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+      mapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
       Try(mapper.readValue(json, classType)) match {
         case Success(result) =>
           result.asInstanceOf[T]

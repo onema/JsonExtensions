@@ -45,6 +45,7 @@ object JavaExtensions {
       val mapper = new ObjectMapper()
       mapper.registerModule(new JodaModule)
       mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
       Try(mapper.readValue(json, classType)) match {

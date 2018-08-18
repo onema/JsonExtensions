@@ -23,6 +23,7 @@ import scala.util.{Failure, Success, Try}
   */
 object JavaExtensions {
   implicit class JavaPojoToJson(objectClass: Any) {
+
     /**
       * Some java types are not properly serialized by json4s
       *
@@ -35,6 +36,7 @@ object JavaExtensions {
   }
 
   implicit class JsonStringToJavaPojo(json: String) {
+
     /**
       * Parses a json string to a java class of the given type parameter.
       * @tparam T type to serialize json into

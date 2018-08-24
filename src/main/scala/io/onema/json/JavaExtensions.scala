@@ -35,7 +35,7 @@ object JavaExtensions {
     }
   }
 
-  implicit class JsonStringToJavaPojo(json: String) {
+  implicit class JsonStringToJavaPojo(json: String)(implicit mapper: ObjectMapper = Mapper.default) {
 
     /**
       * Parses a json string to a java class of the given type parameter.
@@ -44,12 +44,6 @@ object JavaExtensions {
       */
     def jsonDecode[T: ClassTag]: T = {
       val classType: Class[_] = implicitly[ClassTag[T]].runtimeClass
-      val mapper = new ObjectMapper()
-      mapper.registerModule(new JodaModule)
-      mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
-      mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-      mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-      mapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
       Try(mapper.readValue(json, classType)) match {
         case Success(result) =>
           result.asInstanceOf[T]
@@ -58,4 +52,14 @@ object JavaExtensions {
       }
     }
   }
+}
+
+protected object Mapper {
+  val default: ObjectMapper = new ObjectMapper()
+    .registerModule(new JodaModule)
+    .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+    .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+    .enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT)
+
 }

@@ -10,8 +10,11 @@
   */
 package json
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import io.onema.json.JavaExtensions._
+import io.onema.json.Mapper
 import org.scalatest.{FlatSpec, Matchers}
+
 import scala.collection.JavaConverters._
 
 class TestJsonJavaExtensions  extends FlatSpec with Matchers {
@@ -46,6 +49,45 @@ class TestJsonJavaExtensions  extends FlatSpec with Matchers {
 
     // Act
     val javaClass = json.jsonDecode[Example]
+
+    // Assert
+    javaClass.getAge should be(23)
+    javaClass.getName should be("foobar")
+    javaClass.getBlog should be("http://blog.test.com")
+  }
+
+  "A json string" should "throw an exception on un-known property using the default ObjectMapper" in {
+    // Arrange
+    val json =
+      """
+        |  {
+        |    "age":23,
+        |    "name":"foobar",
+        |    "blog":"http://blog.test.com",
+        |    "messages":["msg1","msg2","msg3"],
+        |    "foo":"bar"
+        |  }
+      """.stripMargin
+
+    // Act - Assert
+    intercept[UnrecognizedPropertyException] {json.jsonDecode[Example]}
+  }
+
+  "A json string" should "NOT throw an exception on un-known property using the custom ObjectMapper" in {
+    // Arrange
+    val json =
+      """
+        |  {
+        |    "age":23,
+        |    "name":"foobar",
+        |    "blog":"http://blog.test.com",
+        |    "messages":["msg1","msg2","msg3"],
+        |    "foo":"bar"
+        |  }
+      """.stripMargin
+
+    // Act - Assert
+    val javaClass = json.jsonDecode[Example](Mapper.allowUnknownPropertiesMapper)
 
     // Assert
     javaClass.getAge should be(23)

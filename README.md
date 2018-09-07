@@ -1,6 +1,6 @@
 JSON Extensions
 ===============
-![Code Build](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiNnVFUnZXVXdaVGRJN2VvY1BITk82R0pEYjdISDVMa0pVOWttejNySUIrd2VJeTVEUzVjYm10YURPS1NLNDcyZmVJS0tWbG8yUDlNMXdkQ3pHbEI4azlzPSIsIml2UGFyYW1ldGVyU3BlYyI6IjNKMTJNRGh0Q0k2cUNRaU8iLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)
+[![Code Build](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoicG5UTVFwZ3JHUzFuS1ZidGxMeDJwT09pTldHMWZndG5CcTc0S0dBcFZjYlVSL0ZVdGdkUHREelVXbG0yV1RYbDNLdlhJZFk2S1J4N1RkcW1yRkpWbWQ4PSIsIml2UGFyYW1ldGVyU3BlYyI6IkpUL1FUY2dSMkM3bktWNmUiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://console.aws.amazon.com/codebuild/home?region=us-east-1#/projects/JsonExtensions/view)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/99ec645be864498c96a17dab1ec01d15)](https://www.codacy.com/app/onema/JsonExtensions?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=onema/JsonExtensions&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/99ec645be864498c96a17dab1ec01d15)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=onema/JsonExtensions&utm_campaign=Badge_Coverage)
 [![LICENSE](https://img.shields.io/badge/license-Apache--2.0-blue.svg?longCache=true&style=flat-square)](LICENSE)

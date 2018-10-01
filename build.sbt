@@ -12,6 +12,9 @@ libraryDependencies ++= {
     // Json De/Serializer
     "org.json4s"                     %% "json4s-jackson"             % "3.6.0",
     "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"       % "2.9.6",
+    "com.dslplatform" % "dsl-json-scala_2.12" % "1.8.2",
+    "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-core" % "0.31.3" % Compile,
+    "com.github.plokhotnyuk.jsoniter-scala" %% "jsoniter-scala-macros" % "0.31.3" % Provided,
 
     // Testing
     "org.scalatest"                  %% "scalatest"                  % "3.0.0"       % "test"

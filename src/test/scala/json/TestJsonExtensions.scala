@@ -130,7 +130,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     val obj = TestWithTypes("foo", TEST_1)
 
     // Act
-    val jsonValue = obj.asJson(TestTypeSerializer)
+    val jsonValue = obj.asJson
 
     // Assert
     jsonValue should be(result)
@@ -141,7 +141,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     val jsonString = "{\"name\":\"foo\",\"testType\":\"test-2\"}"
 
     // Act
-    val obj = jsonString.jsonDecode[TestWithTypes, TestType](TestTypeSerializer)
+    val obj = jsonString.jsonDecode[TestWithTypes]
 
     // Assert
     obj.name should be("foo")

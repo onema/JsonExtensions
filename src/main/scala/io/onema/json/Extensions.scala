@@ -11,12 +11,12 @@
 
 package io.onema.json
 
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.Serialization
-import org.json4s.jackson.Serialization.write
+import java.io.{ByteArrayInputStream, ByteArrayOutputStream}
 
-import scala.reflect._
+import com.dslplatform.json._
+
+import scala.io.Source
+import scala.reflect.runtime.universe._
 
 
 /**
@@ -24,15 +24,18 @@ import scala.reflect._
   * json, and a json string into a class.
   */
 object Extensions {
-  implicit class CaseClassToJson(anyClass: AnyRef) {
+  implicit class CaseClassToJson(anyClass: Any) {
 
     // --- Methods ---
     /**
       * Converts a class into a json string.
       */
     def asJson: String = {
-      implicit val formats = Serialization.formats(NoTypeHints)
-      write(anyClass)
+      val dslJson = new DslJson[Any]()
+      implicit val encoder = dslJson.encoder[Any]
+      val os = new ByteArrayOutputStream
+      dslJson.encode(anyClass, os)
+      Source.fromInputStream(new ByteArrayInputStream(os.toByteArray)).mkString
     }
 
     /**
@@ -41,10 +44,10 @@ object Extensions {
       * @tparam TEnum Some types cannot be easily serialized like enums , use custom serializer for these types
       * @return
       */
-    def asJson[TEnum](serializer: CustomSerializer[TEnum]): String = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
-      write(anyClass)
-    }
+//    def asJson[TEnum](serializer: CustomSerializer[TEnum]): String = {
+//      implicit val formats = Serialization.formats(NoTypeHints) + serializer
+//      write(anyClass)
+//    }
   }
 
   implicit class JsonStringToCaseClass(json: String) {
@@ -56,14 +59,16 @@ object Extensions {
       * @tparam T type to serialize json into
       * @return object of type T
       */
-    def jsonDecode[T: Manifest]: T = {
-      implicit val formats = Serialization.formats(NoTypeHints)
-      parse(json).extract[T]
+    def jsonDecode[T: TypeTag]: T = {
+      val is = new ByteArrayInputStream(json.getBytes())
+      val dslJson = new DslJson[T]()
+      implicit val decoder = dslJson.decoder[T]
+      dslJson.decode[T](is)
     }
 
-    def jsonDecode[T: Manifest, TEnum](serializer: CustomSerializer[TEnum]): T = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
-      parse(json).extract[T]
-    }
+//    def jsonDecode[T: Manifest, TEnum](serializer: CustomSerializer[TEnum]): T = {
+//      implicit val formats = Serialization.formats(NoTypeHints) + serializer
+//      parse(json).extract[T]
+//    }
   }
 }

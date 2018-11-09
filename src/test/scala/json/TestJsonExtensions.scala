@@ -13,7 +13,8 @@ package json
 import io.onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
 import json.TestTypes.{TEST_1, TEST_2, TestType}
-import org.json4s.CustomSerializer
+import org.json4s.FieldSerializer.renameTo
+import org.json4s.{CustomSerializer, FieldSerializer}
 import org.json4s.JsonAST.JString
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -41,7 +42,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
   "A simple json object with missing element" should "be converted to an object" in {
 
     // Arrange
-    val fooJson = "{\"name\": \"test\", \"value\": \"foo\"}"
+    val fooJson = """{"name": "test", "value": "foo"}"""
 
     // Act
     val fooObject = fooJson.jsonDecode[TestJsonFoo]
@@ -114,7 +115,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
 
   "A message with multiple rows of data" should "be converted to json" in {
     // Arrange
-    val result = "{\"data\":[\"http://foo.com\",\"http://bar.com\",\"http://baz.com\",\"http://blah.org\"]}"
+    val result = """{"data":["http://foo.com","http://bar.com","http://baz.com","http://blah.org"]}"""
     val message = Message(Seq("http://foo.com", "http://bar.com", "http://baz.com", "http://blah.org"))
 
     // Act
@@ -126,7 +127,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
 
   "A case class with an enum using a custom serializer " should "be converted to json" in {
     // Arrange
-    val result = "{\"name\":\"foo\",\"testType\":\"test-1\"}"
+    val result = """{"name":"foo","testType":"test-1"}"""
     val obj = TestWithTypes("foo", TEST_1)
 
     // Act
@@ -138,7 +139,7 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
 
   "A json string with an enum using a custom serializer " should "be converted to a case class" in {
     // Arrange
-    val jsonString = "{\"name\":\"foo\",\"testType\":\"test-2\"}"
+    val jsonString = """{"name":"foo","testType":"test-2"}"""
 
     // Act
     val obj = jsonString.jsonDecode[TestWithTypes, TestType](TestTypeSerializer)
@@ -146,6 +147,18 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     // Assert
     obj.name should be("foo")
     obj.testType should be (TEST_2)
+  }
+
+  "A case class with custom rename serializer " should "be serialized to json " in {
+    // Arrange
+    val obj = RenameObject("test", "one")
+    val result = """{"bar":"test","@baz":"one"}"""
+
+    // Act
+    val jsonString = obj.asJson(RenameObject.renames)
+
+    // Assert
+    jsonString should be(result)
   }
 }
 
@@ -171,3 +184,8 @@ object TestTypeSerializer extends CustomSerializer[TestType](format => ({
   case TEST_2 => JString("test-2")
 }
 ))
+
+case class RenameObject(foo: String, baz: String)
+object RenameObject {
+  val renames = FieldSerializer[RenameObject](renameTo("foo", "bar") orElse renameTo("baz", "@baz"))
+}

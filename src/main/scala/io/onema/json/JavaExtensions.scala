@@ -14,7 +14,7 @@ package io.onema.json
 import com.fasterxml.jackson.databind.{DeserializationFeature, MapperFeature, ObjectMapper}
 import com.fasterxml.jackson.datatype.joda.JodaModule
 
-import scala.reflect._
+import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
 

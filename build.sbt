@@ -2,7 +2,7 @@ organization := "io.onema"
 
 name := "json-extensions"
 
-version := "0.3.0"
+version := "0.3.1"
 
 scalaVersion := "2.12.6"
 

@@ -16,7 +16,7 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
 
-import scala.reflect._
+import scala.reflect.Manifest
 
 
 /**
@@ -42,6 +42,11 @@ object Extensions {
       * @return
       */
     def asJson[TEnum](serializer: CustomSerializer[TEnum]): String = {
+      implicit val formats = Serialization.formats(NoTypeHints) + serializer
+      write(anyClass)
+    }
+
+    def asJson[TEnum](serializer: FieldSerializer[TEnum]): String = {
       implicit val formats = Serialization.formats(NoTypeHints) + serializer
       write(anyClass)
     }

@@ -13,7 +13,7 @@ package json
 import io.onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
 import json.TestTypes.{TEST_1, TEST_2, TestType}
-import org.json4s.FieldSerializer.renameTo
+import org.json4s.FieldSerializer._
 import org.json4s.{CustomSerializer, FieldSerializer}
 import org.json4s.JsonAST.JString
 import org.scalatest.{FlatSpec, Matchers}
@@ -160,6 +160,18 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     // Assert
     jsonString should be(result)
   }
+
+  "A json string " should "be deserialized to a case class with custom rename serializer " in {
+    // Arrange
+    val jsonString = """{"bar":"test","@baz":"one"}"""
+
+    // Act
+    val obj = jsonString.jsonDecode(RenameObject.renames)
+
+    // Assert
+    obj.foo should be("test")
+    obj.baz should be("one")
+  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)
@@ -187,5 +199,7 @@ object TestTypeSerializer extends CustomSerializer[TestType](format => ({
 
 case class RenameObject(foo: String, baz: String)
 object RenameObject {
-  val renames = FieldSerializer[RenameObject](renameTo("foo", "bar") orElse renameTo("baz", "@baz"))
+  val renames = FieldSerializer[RenameObject](
+    renameTo("foo", "bar") orElse renameTo("baz", "@baz"),
+    renameFrom("bar", "foo") orElse renameFrom("@baz", "baz"))
 }

@@ -70,5 +70,10 @@ object Extensions {
       implicit val formats = Serialization.formats(NoTypeHints) + serializer
       parse(json).extract[T]
     }
+
+    def jsonDecode[T: Manifest](serializer: FieldSerializer[T]): T = {
+      implicit val formats = Serialization.formats(NoTypeHints) + serializer
+      parse(json).extract[T]
+    }
   }
 }

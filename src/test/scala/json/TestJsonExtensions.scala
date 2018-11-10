@@ -14,8 +14,9 @@ import io.onema.json.Extensions._
 import com.fasterxml.jackson.annotation.JsonProperty
 import json.TestTypes.{TEST_1, TEST_2, TestType}
 import org.json4s.FieldSerializer._
-import org.json4s.{CustomSerializer, FieldSerializer}
+import org.json4s.{CustomSerializer, FieldSerializer, NoTypeHints}
 import org.json4s.JsonAST.JString
+import org.json4s.jackson.Serialization
 import org.scalatest.{FlatSpec, Matchers}
 
 class TestJsonExtensions  extends FlatSpec with Matchers {
@@ -172,6 +173,30 @@ class TestJsonExtensions  extends FlatSpec with Matchers {
     obj.foo should be("test")
     obj.baz should be("one")
   }
+
+  "A nested case class with custom rename serializer " should "be serialized to json " in {
+    // Arrange
+    val obj = TestWithAnnotation(NestedObject("foo"))
+    val result = """{"test_one":{"foo_bar":"foo"}}"""
+
+
+    // Act
+    val jsonString = obj.asJson(RenameObject.nestedFormats)
+
+    // Assert
+    jsonString should be(result)
+  }
+
+  "A nested json string " should "be deserialized to a case class with custom rename serializer " in {
+    // Arrange
+    val jsonString = """{"test_one":{"foo_bar":"foo"}}"""
+
+    // Act
+    val obj = jsonString.jsonDecode[TestWithAnnotation](RenameObject.nestedFormats)
+
+    // Assert
+    obj.testOne.fooBar should be("foo")
+  }
 }
 
 case class TestJsonFoo(name: String, value: String, id: Int = 0)
@@ -179,7 +204,8 @@ case class TestJsonBaz(id: Int, array: Array[TestJsonFoo])
 case class TestJsonBazSeq(id: Int, array: Seq[TestJsonFoo])
 case class TestJsonBar(id: Int, testFoo: TestJsonFoo)
 case class Message(data: Seq[String])
-case class TestWithAnnotation(@JsonProperty("test_one") testOne: String)
+case class TestWithAnnotation(testOne: NestedObject)
+case class NestedObject(fooBar: String)
 case class ScalaExample(age: Int, name: String, blog: String, messages: Seq[String])
 case class TestWithTypes(name: String, testType: TestType)
 object TestTypes {
@@ -202,4 +228,13 @@ object RenameObject {
   val renames = FieldSerializer[RenameObject](
     renameTo("foo", "bar") orElse renameTo("baz", "@baz"),
     renameFrom("bar", "foo") orElse renameFrom("@baz", "baz"))
+  val testWithAnnotationRename = FieldSerializer[TestWithAnnotation](
+    renameTo("testOne", "test_one"),
+    renameFrom("test_one", "testOne")
+  )
+  val nestedObjectRename = FieldSerializer[NestedObject](
+    renameTo("fooBar", "foo_bar"),
+    renameFrom("foo_bar", "fooBar")
+  )
+  val nestedFormats = Serialization.formats(NoTypeHints) + testWithAnnotationRename + nestedObjectRename
 }

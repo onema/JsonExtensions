@@ -42,13 +42,17 @@ object Extensions {
       * @return
       */
     def asJson[TEnum](serializer: CustomSerializer[TEnum]): String = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
-      write(anyClass)
+      val formats = Serialization.formats(NoTypeHints) + serializer
+      anyClass.asJson(formats)
     }
 
     def asJson[TEnum](serializer: FieldSerializer[TEnum]): String = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
-      write(anyClass)
+      val formats = Serialization.formats(NoTypeHints) + serializer
+      anyClass.asJson(formats)
+    }
+
+    def asJson[TEnum](formats: Formats): String = {
+      write(anyClass)(formats)
     }
   }
 
@@ -67,12 +71,17 @@ object Extensions {
     }
 
     def jsonDecode[T: Manifest, TEnum](serializer: CustomSerializer[TEnum]): T = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
-      parse(json).extract[T]
+      val formats = Serialization.formats(NoTypeHints) + serializer
+      json.jsonDecode(formats)
     }
 
     def jsonDecode[T: Manifest](serializer: FieldSerializer[T]): T = {
-      implicit val formats = Serialization.formats(NoTypeHints) + serializer
+      val formats = Serialization.formats(NoTypeHints) + serializer
+      json.jsonDecode(formats)
+    }
+
+    def jsonDecode[T: Manifest](formats: Formats): T = {
+      implicit val f: Formats = formats
       parse(json).extract[T]
     }
   }

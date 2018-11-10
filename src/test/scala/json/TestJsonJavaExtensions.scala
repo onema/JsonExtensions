@@ -26,7 +26,7 @@ class TestJsonJavaExtensions  extends FlatSpec with Matchers {
     javaCls.setAge(34)
     javaCls.setBlog("http://blog.test.com")
     javaCls.setMessages(List("msg1", "msg2", "msg3").asJava)
-    val expectedJson = "{\"age\":34,\"name\":\"foobar\",\"blog\":\"http://blog.test.com\",\"messages\":[\"msg1\",\"msg2\",\"msg3\"]}"
+    val expectedJson = """{"age":34,"name":"foobar","blog":"http://blog.test.com","messages":["msg1","msg2","msg3"]}"""
 
     // Act
     val result = javaCls.asJson

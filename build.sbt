@@ -1,20 +1,26 @@
+lazy val scala213 = "2.13.0"
+lazy val scala212 = "2.12.8"
+lazy val scala211 = "2.11.12"
+lazy val supportedScalaVersions = List(scala213, scala212, scala211)
 organization := "io.onema"
 
 name := "json-extensions"
 
-version := "0.5.0"
+version := "0.5.1"
 
-scalaVersion := "2.12.6"
+scalaVersion := scala213
+
+crossScalaVersions := supportedScalaVersions
 
 libraryDependencies ++= {
   Seq(
 
     // Json De/Serializer
-    "org.json4s"                     %% "json4s-jackson"             % "3.6.0",
-    "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"       % "2.9.6",
+    "org.json4s"                     %% "json4s-jackson"             % "3.6.6",
+    "com.fasterxml.jackson.datatype" % "jackson-datatype-joda"       % "2.9.9",
 
     // Testing
-    "org.scalatest"                  %% "scalatest"                  % "3.0.0"       % "test"
+    "org.scalatest"                  %% "scalatest"                  % "3.0.8"       % "test"
   )
 }
 
